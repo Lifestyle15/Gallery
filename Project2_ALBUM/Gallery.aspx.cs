@@ -45,9 +45,7 @@ namespace Project2_ALBUM
 
         void imageButton_Click(object sender, ImageClickEventArgs e)
         {
-            //ImageButton imageButton = new ImageButton();
-            ////imageButton.
-            //String name = imageButton_Click;
+            
             
             Response.Redirect("~/WebForm1.aspx?ImageURL=" + ((ImageButton)sender).ImageUrl);
 
