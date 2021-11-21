@@ -28,6 +28,10 @@
             <br />
             <div class="btn-div">
                 <asp:Button CssClass="btn-signup" ID="btnLogin" runat="server" OnClick="btnLogin_Click" Text="Login" />
+                <asp:Button CssClass="btn-login2" ID="btnSign" runat="server" Text="Sign UP" OnClick="btnSign_Click" />
+                <br />
+                <br />
+               
             </div>            
             <br />
         </div>

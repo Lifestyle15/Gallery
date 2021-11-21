@@ -16,17 +16,15 @@ namespace Project2_ALBUM
         SqlConnection conn = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\App_Data\Album.mdf;Integrated Security=True");
         protected void Page_Load(object sender, EventArgs e)
         {
-            Label6.Visible = false;
+            
             
         }
-
-     
 
         protected void btnSignUp_Click(object sender, EventArgs e)
         {
             encryption();
             String name = TextBox1.Text;
-            String password = TextBox2.Text;
+            
 
             conn.Open();
             String str = "INSERT INTO Users VALUES ('" + name + "','" + encrypted + "') ";
@@ -36,8 +34,8 @@ namespace Project2_ALBUM
             cmd.ExecuteNonQuery();
             conn.Close();
             
-            Label6.Visible = true;
-            Label6.Text = "Account created successfully";
+            
+            Response.Write("<script>alert('Account created successfully!')</script>");
 
             Response.Redirect("~/Loggin.aspx");
         }
@@ -46,6 +44,7 @@ namespace Project2_ALBUM
         {
             Response.Redirect("~/Loggin.aspx");
         }
+
         public void encryption()
         {
             string msg = string.Empty;

@@ -164,3 +164,7 @@ C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\bin\Microsoft.Extensions.Opt
 C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\bin\Microsoft.Extensions.Primitives.xml
 C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\bin\Microsoft.Extensions.WebEncoders.xml
 C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\bin\System.Text.Encodings.Web.xml
+C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\bin\EntityFramework.dll
+C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\bin\EntityFramework.SqlServer.dll
+C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\bin\EntityFramework.xml
+C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\bin\EntityFramework.SqlServer.xml

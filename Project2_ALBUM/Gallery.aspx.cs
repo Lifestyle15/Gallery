@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using CloudinaryDotNet.Actions;
 using CloudinaryDotNet;
-
+//OnSelectedIndexChanged="DataList1_SelectedIndexChanged"
 namespace Project2_ALBUM
 {
     public partial class Gallery : System.Web.UI.Page
@@ -19,20 +19,15 @@ namespace Project2_ALBUM
         
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
-            {
-                Calendar1.Visible = false;
-                
-            }
-           
+            if (Session["username"] == null)
+                Response.Redirect("Loggin.aspx");
+            lblDetails.Text = "Username: " + Session["username"];
+
             if(!IsPostBack)
             {
                 fillData();
             }
-            if (!IsPostBack)
-            {
-                clearFields();
-            }
+            
         }
         //"djkuep2mt"
         protected void Cloud(string ruta)
@@ -44,17 +39,12 @@ namespace Project2_ALBUM
 
             try
             {
-                string name = "";
-                
                 CloudinaryDotNet.Cloudinary cloudinary = new CloudinaryDotNet.Cloudinary(account);
-                
 
-                //string filename = Path.GetFileName(FileUpload1.FileName);
                 var uploadParams = new ImageUploadParams()
                 { 
-                    File = new FileDescription(UploadImage(name)),
-                    PublicId = "Olympic_flag",
-                    //Folder = @"C:\Users\Bokang\Documents\GitHub\new\Project2_ALBUM\Images"
+                    File = new FileDescription("~/Images/ " + FileUpload1.FileName),
+                    
                 };
                 var uploadResult = cloudinary.Upload(uploadParams);
 
@@ -74,10 +64,8 @@ namespace Project2_ALBUM
         protected void Button1_Click(object sender, EventArgs e)
         {
             string tags = txtTags.Text;
-            string Location = txtLocation.Text;
-            string date = txtDate.Text;
-            string Captured = txtCaptured.Text;
-            string fileName = Path.GetFileName(FileUpload1.FileName);
+            
+            string fileName = (FileUpload1.FileName);
             string fileExtension = Path.GetExtension(fileName);
 
             try
@@ -99,123 +87,58 @@ namespace Project2_ALBUM
                         lbIndicator.ForeColor = System.Drawing.Color.Blue;
 
                     }
-
-
-                    
-
-                }
-
-                
-                SqlCommand cmd = new SqlCommand("INSERT INTO Photo Values('" + fileName + "','" + tags + "','" + Location + "','" + date + "', '" + Captured + "') ", con);
+                }//"~/Images/"
+                SqlCommand cmd = new SqlCommand("INSERT INTO Photo(Photo_Name,Tags) Values('"+ "~/Images/" + fileName+"','"+tags+ "') ", con);
               
                 cmd.ExecuteNonQuery();
                 DataList1.DataBind();
+                con.Close();
                 
             }
             catch (Exception ex)
             {
-                Label6.Text = ("Error occured" + ex.Message);
+                Label6.Text = ("Error occured " + ex.Message);
             }
-            finally
-            {
-                con.Close();
-            }
+            
             fillData();
+            clearFields();
         }
-
-        public string  UploadImage(string name)
-        {
-            
-            foreach (string strName in Directory.GetFiles(Server.MapPath("~/Images/")))
-            {
-                ImageButton imageButton = new ImageButton();
-                FileInfo fileinfo = new FileInfo(strName);
-                if (FileUpload1.FileName == "~/Images/" + fileinfo.Name)
-                {
-                    name = FileUpload1.FileName;
-                    break;
-                }
-
-                    //ImageButton imageButton = new ImageButton();
-                    //FileInfo fileinfo = new FileInfo(strName);
-                    //imageButton.ImageUrl = "~/Images/" + fileinfo.Name;
-                    //imageButton.Width = Unit.Pixel(100);
-                    //imageButton.Height = Unit.Pixel(100);
-                    //imageButton.Style.Add("padding", " 5px");
-                    //imageButton.Click += new ImageClickEventHandler(imageButton_Click);
-                    //DataList1.Controls.Add(imageButton);
-                }
-            return name;
-        }
-
-        void imageButton_Click(object sender, ImageClickEventArgs e)
-        {
-            
-            
-            Response.Redirect("~/WebForm1.aspx?ImageURL=" + ((ImageButton)sender).ImageUrl);
-
-        }
-
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             try
             {
                 con.Open();
-                SqlCommand cmd = new SqlCommand("SELECT * FROM Photo WHERE Captured_By LIKE'%' " + txtSerach.Text + " '%' OR Geolocation Like'%'" + txtSerach.Text + "'%'", con);
-                SqlDataAdapter ad = new SqlDataAdapter();
-                cmd.ExecuteNonQuery();
+                SqlDataAdapter da = new SqlDataAdapter($"SELECT * FROM Photo WHERE Captured_By LIKE %'{txtSerach.Text}'%", con);
                 DataSet ds = new DataSet();
-                ad.Fill(ds);
+                //SqlCommand cmd = new SqlCommand($"SELECT * FROM Photo WHERE Captured_By LIKE '{txtSerach.Text}'", con);
+       
+                //da.SelectCommand = cmd;
+                da.Fill(ds, "Photo");
+               
                 DataList1.DataSource = ds;
                 DataList1.DataBind();
+                DataList1.DataMember = "Photo";
 
+                con.Close();
             }
             catch(Exception ex)
             {
-
                 lbIndicator.Text="No match found"+ ex.Message;
             }
-            
-            con.Close();
-            
         }
-
-        protected void txtSerach_TextChanged(object sender, EventArgs e)
-        {
-            
-            txtSerach.Text = "";
-        }
-
-        protected void DataList1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void ImageButton1_Click(object sender, ImageClickEventArgs e)
-        {
-            
-            if (Calendar1.Visible)
-            {
-                Calendar1.Visible = false;
-            }
-            else {
-                Calendar1.Visible = true;
-            }
-        }
-
-        protected void Calendar1_SelectionChanged(object sender, EventArgs e)
-        {
-            txtDate.Text = Calendar1.SelectedDate.ToString("d");
-            Calendar1.Visible = false;
-        }
-
         protected void DataList1_ItemCommand(object source, DataListCommandEventArgs e)
         {
             try
             {
-                if (e.CommandName == "update")
+                if (e.CommandName == "edit")
                 {
                     DataList1.EditItemIndex = e.Item.ItemIndex;
+                    fillData();
+
+                }
+                else if (e.CommandName == "cancel")
+                {
+                    DataList1.EditItemIndex = -1;
                     fillData();
 
                 }
@@ -231,33 +154,24 @@ namespace Project2_ALBUM
                     fillData();
 
                 }
-
-                else if (e.CommandName == "cancel")
+                else if (e.CommandName == "update")
                 {
-                    DataList1.EditItemIndex = -1;
-                    fillData();
-
-                }
-
-                else if (e.CommandName == "submit")
-                {
-                    int id = Convert.ToInt32((Label)e.Item.FindControl("lblID"));
+                    string id = ((Label)e.Item.FindControl("lblID")).Text;
                     
                     string tag = ((TextBox)e.Item.FindControl("txtUpdateTags")).Text;
                     string location = ((TextBox)e.Item.FindControl("txtUpdateLoca")).Text;
-                    //string date = ((TextBox)e.Item.FindControl("txtUpdateDate")).Text;
+                    string date = ((TextBox)e.Item.FindControl("txtUpdateDate")).Text;
                     string CapBy = ((TextBox)e.Item.FindControl("txtUpdateBy")).Text;
 
-                    SqlCommand cmd = new SqlCommand("UPDATE Photo SET Tags='"+tag+"',Geolocation='"+location+"',Captured_By='"+CapBy+"'WHERE PhotoID='" + id + "'", con);
+                    SqlCommand cmd = new SqlCommand("UPDATE Photo SET Tags='"+tag+"',Geolocation='"+ location+ "',Captured_Date='" + date + "',Captured_By='" + CapBy+"'WHERE PhotoID='" + id + "'", con);
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
-                    fillData();
                     DataList1.EditItemIndex = -1;
-
-                    
-
+                    fillData();
+                   
                 }
+               
                 else if (e.CommandName == "Download")
                 {
                     Response.Clear();
@@ -283,18 +197,19 @@ namespace Project2_ALBUM
             da.Fill(ds);
             DataList1.DataSource = ds;
             DataList1.DataBind();
-            //DataSourceID="SqlDataSource1"
-            //OnDeleteCommand="DataList1_DeleteCommand"
-            //OnClick="btnDelete_Click"
+            
         }
         public void clearFields()
         {
             txtTags.Text = "";
-            txtLocation.Text = "";
-            txtDate.Text = "";
-            txtCaptured.Text = "";
+           
         }
 
+        protected void btnLog_Click(object sender, EventArgs e)
+        {
+            Session.Abandon();
+            Response.Redirect("Loggin.aspx");
+        }
 
     }
 }

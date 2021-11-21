@@ -1,0 +1,84 @@
+﻿* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    background-color: #808080;
+}
+.main-form {
+    width: 100%;
+}
+.main-div {
+    width: 100%;
+}
+.top-nav {
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-bottom: 1px solid black
+}
+.main-content {
+    width: 100%;
+
+}
+.second-nav {
+    width: 100%;
+    border-bottom: 1px solid black;
+    height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.datalist-div {
+    width: 100%;
+    padding: 10px;
+}
+.file-upload {
+    margin: 5px 0;
+    width: 30%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+}
+.description {
+    margin: 5px 0;
+    width: 30%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+}
+.btn-div {
+    margin: 5px 0;
+    width: 30%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: row;
+}
+.datalist {
+    width: 100%;
+}
+.btn-upload {
+    width: 50%;
+    padding: 0.5rem 0.7rem;
+}
+.btn-logout {
+    background-color: red;
+    border-radius: 7px;
+    padding: 5px 10px;
+    color: white;
+}
+.btn-search {
+    background-color: blue;
+    border-radius: 7px;
+    padding: 5px 10px;
+    color: white;
+}

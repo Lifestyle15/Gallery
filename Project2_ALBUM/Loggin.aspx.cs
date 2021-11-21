@@ -22,17 +22,20 @@ namespace Project2_ALBUM
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-            string username = TextBox1.Text;
-            string password = TextBox2.Text;
+            string username = TextBox1.Text.Trim();
+            string password = TextBox2.Text.Trim();
             con.Open();
             
-            string query = "SELECT COUNT(*) FROM Users WHERE username = '" + username + "' AND userPassword='" + password +"'";
+            string query = "SELECT COUNT(1) FROM Users WHERE username=@username   AND userPassword=@password ";
             SqlCommand cmd = new SqlCommand(query,con);
+            cmd.Parameters.AddWithValue("@username",TextBox1.Text.Trim());
+            cmd.Parameters.AddWithValue("@password",TextBox2.Text.Trim());
             int count = Convert.ToInt32(cmd.ExecuteScalar());
             
-            cmd.ExecuteNonQuery();
+            //cmd.ExecuteNonQuery();
             if (count == 1)
             {
+                Session["username"] = TextBox1.Text.Trim();
                 Response.Redirect("~/Gallery.aspx");
             }
             else
@@ -43,6 +46,10 @@ namespace Project2_ALBUM
 
             con.Close();
         }
-       
+
+        protected void btnSign_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Loggin.aspx");
+        }
     }
 }
