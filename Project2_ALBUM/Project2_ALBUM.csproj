@@ -184,6 +184,7 @@
     <Content Include="css\images\prevlabel.gif" />
     <Content Include="css\lightbox.css" />
     <Content Include="Default.aspx" />
+    <Content Include="Design.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Gallery.aspx" />
